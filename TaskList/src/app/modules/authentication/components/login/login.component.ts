@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
 import { MatDialogRef } from '@angular/material';
-import { AuthenticationService } from 'src/app/modules/authentication/services/authentication.service';
+import { AuthenticationService } from 'src/app/services/authentication/authentication.service';
 import { LoginModel } from 'src/app/model/login/loginmodel';
 
 @Component({
