@@ -5,9 +5,8 @@ import { LoginComponent } from '../../modules/authentication/components/login/lo
 import { RegisterComponent } from '../../modules/authentication/components/register/register.component';
 import { User } from 'src/app/model/users/user';
 import { first } from 'rxjs/operators';
-import { AuthenticationService } from 'src/app/modules/authentication/services/authentication.service';
+import { AuthenticationService } from 'src/app/services/authentication/authentication.service';
 import { LoginModel } from 'src/app/model/login/loginmodel';
-import { LoginResponse } from 'src/app/model/login/loginresponse';
 
 @Component({
   selector: 'app-toolbar',
@@ -24,7 +23,7 @@ export class ToolbarComponent implements OnInit {
     private authenticationService: AuthenticationService
     ) {
       this.authenticationService.currentUser.subscribe(currentUser => {
-        this.user = currentUser;
+        this.user = currentUser == null ? null : currentUser.user;
       });
     }
 
@@ -73,8 +72,7 @@ export class ToolbarComponent implements OnInit {
       .pipe(first())
       .subscribe(
         data => {
-          console.log('success');
-          console.log(data);
+          this.router.navigate(['/mainpage']);
         },
         error => {
           console.log('error');
@@ -84,7 +82,7 @@ export class ToolbarComponent implements OnInit {
 
   logout() {
     this.authenticationService.logout();
-    this.router.navigate(['/mainpage']);
+    this.router.navigate(['/']);
   }
 
   register(username: string, password: string) {
