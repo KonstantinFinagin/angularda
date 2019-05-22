@@ -1,0 +1,33 @@
+<mat-toolbar color="primary">
+
+  <button mat-button (click)="navigateMainPage()">
+    Home
+  </button>
+
+  <button mat-button (click)="navigateDashboard()">
+    Dashboard
+  </button>
+
+  <span class="example-spacer"></span>
+
+  <div *ngIf="user">
+    <section class="mat-typography">
+        Hello, {{user.first}}!
+        <button mat-button (click)="logout()">
+            Logout
+          </button>
+    </section>
+  </div>
+
+  <div *ngIf="!user">
+    <button mat-button (click)="openLoginDialog()">
+      Login
+    </button>
+    
+    <button mat-button (click)="openRegisterDialog()" disabled>
+      Register
+    </button>
+  </div>
+
+
+</mat-toolbar>
