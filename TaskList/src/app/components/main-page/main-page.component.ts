@@ -3,60 +3,8 @@ import { Project } from 'src/app/model/project/project';
 import { ProjectService } from 'src/app/services/project/project.service';
 import { Observable } from 'rxjs';
 import { TimesheetService } from 'src/app/services/timesheet/timesheet.service';
-
-export interface DateList {}
-
-export interface Ticket {
-  _id: string;
-  hours: number;
-  comment: string;
-}
-
-export interface TicketTimesheet {
-  name: string;
-  day1: Ticket;
-  day2: Ticket;
-  day3: Ticket;
-  day4: Ticket;
-  day5: Ticket;
-}
-
-export interface ProjectGroup {
-  name: string;
-}
-
-const ELEMENT_DATA: (TicketTimesheet | ProjectGroup)[] = [
-  {name: 'Project 1'},
-  {name: 'Ticket1',
-    day1: { _id: '', hours: 4, comment: ''},
-    day2: { _id: '', hours: 4, comment: ''},
-    day3: { _id: '', hours: 4, comment: ''},
-    day4: { _id: '', hours: 4, comment: ''},
-    day5: { _id: '', hours: 4, comment: ''},
-  },
-  {name: 'Ticket2',
-    day1: { _id: '', hours: 4, comment: ''},
-    day2: { _id: '', hours: 4, comment: ''},
-    day3: { _id: '', hours: 4, comment: ''},
-    day4: { _id: '', hours: 4, comment: ''},
-    day5: { _id: '', hours: 4, comment: ''},
-  },
-  {name: 'Project 2'},
-  {name: 'Ticket1',
-    day1: { _id: '', hours: 4, comment: ''},
-    day2: { _id: '', hours: 4, comment: ''},
-    day3: { _id: '', hours: 4, comment: ''},
-    day4: { _id: '', hours: 4, comment: ''},
-    day5: { _id: '', hours: 4, comment: ''},
-  },
-  {name: 'Ticket2',
-    day1: { _id: '', hours: 4, comment: ''},
-    day2: { _id: '', hours: 4, comment: ''},
-    day3: { _id: '', hours: 4, comment: ''},
-    day4: { _id: '', hours: 4, comment: ''},
-    day5: { _id: '', hours: 4, comment: ''},
-  },
-];
+import { Ticket } from 'src/app/model/project/ticket';
+import {FormControl} from '@angular/forms';
 
 @Component({
   selector: 'app-main-page',
@@ -65,12 +13,12 @@ const ELEMENT_DATA: (TicketTimesheet | ProjectGroup)[] = [
 })
 export class MainPageComponent implements OnInit {
 
-  dataSource = ELEMENT_DATA;
-
+  myControl = new FormControl();
   projects: Observable<Project[]>;
   tickets: Observable<Ticket[]>;
 
-  displayedColumns: string[] = ['name', 'backward', 'day1', 'day2', 'day3', 'day4', 'day5', 'forward'];
+  pivotDate: Date;
+  currentDates: Date[];
 
   constructor(
     private projectService: ProjectService,
@@ -81,9 +29,31 @@ export class MainPageComponent implements OnInit {
   ngOnInit() {
     this.projects = this.projectService.projects;
     this.projectService.loadAll();
+
+    this.pivotDate = new Date();
+    this.setDates();
   }
 
   isGroup(index, item): boolean {
     return item.group;
   }
+
+  setDates() {
+    this.currentDates = [-6, -5, -4, -3, -2, -1, 0].map(days => {
+      const date = new Date();
+      date.setDate(this.pivotDate.getDate() + days);
+      return date;
+    });
+  }
+
+  pivotDateIncrease() {
+    this.pivotDate.setDate(this.pivotDate.getDate() + 7);
+    this.setDates();
+  }
+
+  pivotDateDecrease() {
+    this.pivotDate.setDate(this.pivotDate.getDate() - 7);
+    this.setDates();
+  }
+
 }

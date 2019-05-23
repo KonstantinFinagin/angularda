@@ -1,59 +1,34 @@
-<mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+<form class="example-form">
+  <mat-form-field class="example-full-width">
+    <input matInput placeholder="Filter by project" value="">
+  </mat-form-field>
+</form>
 
-  <!-- project name column -->
-  <ng-container matColumnDef="name">
-    <mat-header-cell *matHeaderCellDef> Timesheets </mat-header-cell>
-    <mat-cell *matCellDef="let element"> {{element.name}} </mat-cell>
-  </ng-container>
+<mat-accordion>
+  <mat-expansion-panel *ngFor="let project of projects | async">
+    <mat-expansion-panel-header>
+      <mat-panel-title class="mat-expansion-panel-header-title">
+        <div>{{project.name}}</div>
+      </mat-panel-title>
+      <mat-panel-description class="mat-expansion-panel-header-description">
+        <div>{{project.description}}</div>
+      </mat-panel-description>
+    </mat-expansion-panel-header>
 
+    <mat-grid-list [cols]="this.currentDates.length + 3" rowHeight="50">
+      <mat-grid-tile></mat-grid-tile>
+      <mat-grid-tile><button mat-button (click)="pivotDateDecrease()"><mat-icon>keyboard_arrow_left</mat-icon></button></mat-grid-tile>
+      <mat-grid-tile *ngFor="let date of currentDates">{{date | date: 'dd/MM/yyyy'}}</mat-grid-tile>
+      <mat-grid-tile><button mat-button (click)="pivotDateIncrease()"><mat-icon>keyboard_arrow_right</mat-icon></button></mat-grid-tile>
+    </mat-grid-list>
 
-  <!-- Backward column  -->
-  <ng-container matColumnDef="backward">
-      <mat-header-cell *matHeaderCellDef><button mat-button>backward</button></mat-header-cell>
-      <mat-cell *matCellDef="let row"></mat-cell>
-    </ng-container>
-  <!-- Forward column  -->
-  <ng-container matColumnDef="forward">
-    <mat-header-cell *matHeaderCellDef> <button mat-button>forward</button> </mat-header-cell>
-    <mat-cell *matCellDef="let row"></mat-cell>
-  </ng-container>
-
-  <!-- Day 1 column  -->
-  <ng-container matColumnDef="day1">
-    <mat-header-cell *matHeaderCellDef> Day 1 </mat-header-cell>
-    <mat-cell *matCellDef="let element"> <mat-card *ngIf="element.day1">{{ element.day1 }} </mat-card></mat-cell>
-  </ng-container>
-
-  <!-- Day 2 column  -->
-  <ng-container matColumnDef="day2">
-    <mat-header-cell *matHeaderCellDef> Day 2 </mat-header-cell>
-    <mat-cell *matCellDef="let element"> {{ element.day2 }} </mat-cell>
-  </ng-container>
-
-  <!-- Day 3 column  -->
-  <ng-container matColumnDef="day3">
-    <mat-header-cell *matHeaderCellDef> Day 3 </mat-header-cell>
-    <mat-cell *matCellDef="let element"> {{ element.day3 }} </mat-cell>
-  </ng-container>
-
-  <!-- Day 4 column  -->
-  <ng-container matColumnDef="day4">
-    <mat-header-cell *matHeaderCellDef> Day 4 </mat-header-cell>
-    <mat-cell *matCellDef="let element"> {{ element.day4 }} </mat-cell>
-  </ng-container>
-
-  <!-- Day 5 column  -->
-  <ng-container matColumnDef="day5">
-    <mat-header-cell *matHeaderCellDef> Day 5 </mat-header-cell>
-    <mat-cell *matCellDef="let element"> {{ element.day5 }} </mat-cell>
-  </ng-container>
-
-  <ng-container matColumnDef="groupHeader">
-    <mat-cell *matCellDef="let projectGroup">{{projectGroup.name}}</mat-cell>
-  </ng-container>
-
-  <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-  <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
-  <mat-row *matRowDef="let row; columns: ['groupHeader']; when: isGroup"> </mat-row>
-
-</mat-table>
+    <mat-list *ngFor="let ticket of project.tickets">
+      <mat-grid-list [cols]="this.currentDates.length + 3" rowHeight="50">
+        <mat-grid-tile>{{ticket.name}}</mat-grid-tile>
+        <mat-grid-tile></mat-grid-tile>
+        <mat-grid-tile *ngFor="let date of currentDates">1</mat-grid-tile>
+        <mat-grid-tile></mat-grid-tile>
+      </mat-grid-list>
+    </mat-list>
+  </mat-expansion-panel>
+</mat-accordion>

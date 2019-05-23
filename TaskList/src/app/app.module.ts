@@ -7,7 +7,7 @@ import { ToolbarComponent } from './components/toolbar/toolbar.component';
 import { LoginComponent } from './modules/authentication/components/login/login.component';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { MainPageComponent } from './components/main-page/main-page.component';
-import { ReactiveFormsModule } from '@angular/forms';
+import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { RegisterComponent } from './modules/authentication/components/register/register.component';
 import { routing } from './app.routing';
 import { AppConfigModule } from './app-config/app-config.module';
@@ -38,7 +38,9 @@ import { ProjectService } from './services/project/project.service';
     ReactiveFormsModule,
     routing,
     AppConfigModule,
-    HttpClientModule
+    HttpClientModule,
+    FormsModule,
+    ReactiveFormsModule
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
