@@ -4,6 +4,9 @@ import { GetProjectResponse } from './contracts/getprojectresponse';
 import { map } from 'rxjs/operators';
 import { Project } from 'src/app/model/project/project';
 import { Observable, BehaviorSubject } from 'rxjs';
+import { TimesheetService } from '../timesheet/timesheet.service';
+import { GetProjectTicketResponse } from './contracts/getprojectticketresponse';
+import { Ticket } from 'src/app/model/project/ticket';
 
 @Injectable({
   providedIn: 'root'
@@ -16,7 +19,10 @@ export class ProjectService {
     projects: Project[]
   };
 
-  constructor(private http: HttpClientHelper) {
+  constructor(
+    private http: HttpClientHelper,
+    private timesheetService: TimesheetService
+    ) {
     this.dataStore = { projects: [] };
     this.projectsSubject = new BehaviorSubject<Project[]>([]);
   }
@@ -27,11 +33,23 @@ export class ProjectService {
 
   loadAll() {
 
-    const mapFunction = (r: GetProjectResponse) => {
+    const mapTicketFunction = (r: GetProjectTicketResponse) => {
+      const t: Ticket = {
+        _id: r._id,
+        name: r.name,
+        status: r.status,
+        project: r.project,
+        timesheets: []
+      };
+      return t;
+    };
+
+    const mapProjectFunction = (r: GetProjectResponse) => {
       const p: Project = {
         _id: r._id,
         description: r.description,
-        name: r.name
+        name: r.name,
+        tickets: r.tickets.map(t => mapTicketFunction(t))
       };
       return p;
     };
@@ -39,7 +57,7 @@ export class ProjectService {
     return this.http.get<GetProjectResponse[]>('projects')
       .subscribe(
         data => {
-          this.dataStore.projects = data.map(r => mapFunction(r));
+          this.dataStore.projects = data.map(r => mapProjectFunction(r));
           this.projectsSubject.next(Object.assign({}, this.dataStore).projects);
         },
         error => {
