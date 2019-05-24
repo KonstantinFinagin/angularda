@@ -2,9 +2,9 @@ import { GetTicketTimesheetResponse } from './gettickettimesheetreponse';
 
 export interface GetTimesheetResponse {
     _id: string;
-    loggedtime: number;
-    date: Date;
-    comment: Comment;
-    ticket: GetTicketTimesheetResponse[];
+    logged_time: number;
+    date: string;
+    comment: string;
+    ticket: GetTicketTimesheetResponse;
 }
 

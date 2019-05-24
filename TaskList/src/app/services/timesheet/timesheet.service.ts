@@ -26,11 +26,25 @@ export class TimesheetService {
     this.dataStore = { tickets: [] };
   }
 
-  getTicketsWithTimesheets(projectId: string, pivotDate: Date) {
+  getTimesheets(projectId: string): Observable<Timesheet[]> {
 
-    this.http
-      .get<GetTimesheetResponse[]>(`timesheets/search?projectId=${projectId}`)
-      .pipe(map(timesheets => timesheets.map(timesheet => <Timesheet>({}))));
+    const mapTimesheetFunction = (timesheet: GetTimesheetResponse) => {
+      const t: Timesheet = {
+        id: timesheet._id,
+        comment: timesheet.comment,
+        date: new Date(timesheet.date),
+        loggedtime: timesheet.logged_time,
+        ticketid: timesheet.ticket._id
+      };
+
+      t.date.setHours(0, 0, 0, 0);
+
+      return t;
+    };
+
+    return this.http
+      .get<GetTimesheetResponse[]>(`timesheets/search?projectId=${projectId}`) // getting timesheets with tickets
+      .pipe(map(timesheets => timesheets.map(timesheet => mapTimesheetFunction(timesheet))));
   }
 
   addTimesheet(timesheetId: string, timesheet: Timesheet) {

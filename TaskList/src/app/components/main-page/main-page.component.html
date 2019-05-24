@@ -5,7 +5,7 @@
 </form>
 
 <mat-accordion>
-  <mat-expansion-panel *ngFor="let project of projects | async">
+  <mat-expansion-panel *ngFor="let project of projects | async" (expandedChange)="projectExpanded(project.id, $event)">
     <mat-expansion-panel-header>
       <mat-panel-title class="mat-expansion-panel-header-title">
         <div>{{project.name}}</div>
@@ -15,20 +15,23 @@
       </mat-panel-description>
     </mat-expansion-panel-header>
 
-    <mat-grid-list [cols]="this.currentDates.length + 3" rowHeight="50">
-      <mat-grid-tile></mat-grid-tile>
+    <mat-grid-list [cols]="this.currentDates.length + 3" rowHeight="40">
+      <mat-grid-tile><h4>Tickets / Dates</h4></mat-grid-tile>
       <mat-grid-tile><button mat-button (click)="pivotDateDecrease()"><mat-icon>keyboard_arrow_left</mat-icon></button></mat-grid-tile>
-      <mat-grid-tile *ngFor="let date of currentDates">{{date | date: 'dd/MM/yyyy'}}</mat-grid-tile>
+      <mat-grid-tile *ngFor="let date of currentDates"><h4>{{date | date: 'dd/MM/yyyy'}}</h4></mat-grid-tile>
       <mat-grid-tile><button mat-button (click)="pivotDateIncrease()"><mat-icon>keyboard_arrow_right</mat-icon></button></mat-grid-tile>
     </mat-grid-list>
 
-    <mat-list *ngFor="let ticket of project.tickets">
-      <mat-grid-list [cols]="this.currentDates.length + 3" rowHeight="50">
+    <mat-list *ngFor="let ticket of tickets">
+      <mat-grid-list [cols]="this.ticket.timesheets.length + 3" rowHeight="40">
         <mat-grid-tile>{{ticket.name}}</mat-grid-tile>
         <mat-grid-tile></mat-grid-tile>
-        <mat-grid-tile *ngFor="let date of currentDates">1</mat-grid-tile>
+        <mat-grid-tile *ngFor="let timesheet of ticket.timesheets">
+          {{timesheet.loggedtime}}
+        </mat-grid-tile>
         <mat-grid-tile></mat-grid-tile>
       </mat-grid-list>
     </mat-list>
+
   </mat-expansion-panel>
 </mat-accordion>
