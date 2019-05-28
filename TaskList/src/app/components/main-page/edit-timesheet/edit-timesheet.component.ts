@@ -38,7 +38,12 @@ export class EditTimesheetComponent implements OnInit {
 
   save() {
     console.log(this.timesheet);
-    this.timesheetService.updateTimesheet(this.timesheet);
+
+    this.timesheetService.updateTimesheet(this.timesheet).subscribe(id => {
+      console.log(id);
+      this.timesheet.id = id;
+    });
+
     this.dialogRef.close(this.timesheet);
   }
 
