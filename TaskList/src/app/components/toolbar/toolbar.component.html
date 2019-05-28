@@ -1,10 +1,10 @@
 <mat-toolbar color="primary">
 
-  <button mat-button (click)="navigateMainPage()">
+  <button mat-button (click)="navigateMainPage()" [disabled]="!user">
     Home
   </button>
 
-  <button mat-button (click)="navigateDashboard()">
+  <button mat-button (click)="navigateDashboard()" [disabled]="!user">
     Dashboard
   </button>
 

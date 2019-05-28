@@ -30,4 +30,20 @@ export class HttpClientHelper {
 
     return this.http.post<T>(apiUrl, data, { headers });
   }
+
+  put<T>(shortUrl: string, data: any) {
+    const apiUrl = this.config.apiUrl + shortUrl;
+    let headers = new HttpHeaders();
+    headers = this.addDefaultHeaders(headers);
+
+    return this.http.put<T>(apiUrl, data, { headers });
+  }
+
+  delete<T>(shortUrl: string) {
+    const apiUrl = this.config.apiUrl + shortUrl;
+    let headers = new HttpHeaders();
+    headers = this.addDefaultHeaders(headers);
+
+    return this.http.delete<T>(apiUrl, { headers });
+  }
 }

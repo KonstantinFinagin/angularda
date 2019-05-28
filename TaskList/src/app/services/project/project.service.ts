@@ -1,50 +1,50 @@
 import { Injectable } from '@angular/core';
 import { HttpClientHelper } from '../../helpers/http-client-helper';
 import { GetProjectResponse } from './contracts/getprojectresponse';
-import { map } from 'rxjs/operators';
+import { map, tap } from 'rxjs/operators';
 import { Project } from 'src/app/model/project/project';
 import { Observable, BehaviorSubject } from 'rxjs';
+import { TimesheetService } from '../timesheet/timesheet.service';
+import { GetProjectTicketResponse } from './contracts/getprojectticketresponse';
+import { Ticket } from 'src/app/model/project/ticket';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ProjectService {
 
-  private projectsSubject: BehaviorSubject<Project[]>;
+  projects: Observable<Project[]>;
 
-  private dataStore: {
-    projects: Project[]
-  };
-
-  constructor(private http: HttpClientHelper) {
-    this.dataStore = { projects: [] };
-    this.projectsSubject = new BehaviorSubject<Project[]>([]);
+  constructor(
+    private http: HttpClientHelper
+    ) {
   }
 
-  get projects(): Observable<Project[]> {
-    return this.projectsSubject.asObservable();
-  }
+  loadAll(): Observable<Project[]> {
 
-  loadAll() {
+    const mapTicketFunction = (r: GetProjectTicketResponse) => {
+      const t: Ticket = {
+        id: r._id,
+        name: r.name,
+        status: r.status,
+        project: r.project,
+        timesheets: []
+      };
+      return t;
+    };
 
-    const mapFunction = (r: GetProjectResponse) => {
+    const mapProjectFunction = (r: GetProjectResponse) => {
       const p: Project = {
-        _id: r._id,
+        id: r._id,
         description: r.description,
-        name: r.name
+        name: r.name,
+        tickets: r.tickets.map(t => mapTicketFunction(t))
       };
       return p;
     };
 
-    return this.http.get<GetProjectResponse[]>('projects')
-      .subscribe(
-        data => {
-          this.dataStore.projects = data.map(r => mapFunction(r));
-          this.projectsSubject.next(Object.assign({}, this.dataStore).projects);
-        },
-        error => {
-          console.log('Failed to fetch projects');
-        });
+    return this.http.get<GetProjectResponse[]>('projects').pipe(
+      map(projects => projects.map(mapProjectFunction)));
   }
 }
 

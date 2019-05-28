@@ -1,0 +1,56 @@
+.project-row-header {
+    flex: 1;
+    margin: 5px
+}
+
+mat-form-field {
+    width: 50;
+  }
+
+.mat-expansion-panel-header-title {
+    flex: 0 0 auto; /* make this not grow or shrink */
+    margin-right: 30px;
+}
+
+
+.mat-expansion-panel-header-description {
+    flex: 1 1 auto; /* make this grow and shrink */
+    min-width: 0; /* see link to see why this is needed */
+    margin-right: 16px;
+}
+
+.mat-expansion-panel-header-description > div {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.mat-expansion-panel-header-title > div {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    width:200px;
+}
+
+.example-form {
+    min-width: 150px;
+    max-width: 500px;
+    width: 100%;
+    margin: 20px;
+}
+  
+.example-full-width {
+    width: 100%;
+}
+
+.mat-row:nth-child(odd){
+    background-color:rgba(211, 211, 211, 0.171);
+    }
+
+.mat-column:nth-child(odd){
+    background-color:rgba(211, 211, 211, 0.171);
+    }
+
+.greyed-out {
+    color: #C0C0C0;
+}

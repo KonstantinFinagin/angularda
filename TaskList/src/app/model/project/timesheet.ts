@@ -1,9 +1,9 @@
 import { Ticket } from './ticket';
 
 export class Timesheet {
-    _id: string;
-    logged_time: number;
+    id: string;
+    loggedtime: number;
     date: Date;
     comment: string;
-    ticket: Ticket;
+    ticketid: string;
 }

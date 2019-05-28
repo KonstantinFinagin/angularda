@@ -7,7 +7,7 @@ import { ToolbarComponent } from './components/toolbar/toolbar.component';
 import { LoginComponent } from './modules/authentication/components/login/login.component';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { MainPageComponent } from './components/main-page/main-page.component';
-import { ReactiveFormsModule } from '@angular/forms';
+import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { RegisterComponent } from './modules/authentication/components/register/register.component';
 import { routing } from './app.routing';
 import { AppConfigModule } from './app-config/app-config.module';
@@ -18,6 +18,8 @@ import { JwtInterceptor } from './helpers/jwt.interceptor';
 import { WelcomeComponent } from './components/welcome/welcome.component';
 import { ErrorComponent } from './components/error/error.component';
 import { ProjectService } from './services/project/project.service';
+import { SmoothHeightComponent } from './helpers/smooth-height.component';
+import { EditTimesheetComponent } from './components/main-page/edit-timesheet/edit-timesheet.component';
 
 @NgModule({
   declarations: [
@@ -29,6 +31,8 @@ import { ProjectService } from './services/project/project.service';
     RegisterComponent,
     WelcomeComponent,
     ErrorComponent,
+    SmoothHeightComponent,
+    EditTimesheetComponent
   ],
   imports: [
     AuthenticationModule,
@@ -38,7 +42,12 @@ import { ProjectService } from './services/project/project.service';
     ReactiveFormsModule,
     routing,
     AppConfigModule,
-    HttpClientModule
+    HttpClientModule,
+    FormsModule,
+    ReactiveFormsModule
+  ],
+  entryComponents: [
+    EditTimesheetComponent
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
