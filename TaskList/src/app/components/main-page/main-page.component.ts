@@ -8,6 +8,10 @@ import { FormControl } from '@angular/forms';
 import { find, map, flatMap, switchMap } from 'rxjs/operators';
 import { Timesheet } from 'src/app/model/project/timesheet';
 import { trigger, transition, style, animate } from '@angular/animations';
+import { delay } from 'q';
+import { tick } from '@angular/core/testing';
+import { MatDialog } from '@angular/material';
+import { EditTimesheetComponent } from './edit-timesheet/edit-timesheet.component';
 
 @Component({
   selector: 'app-main-page',
@@ -29,30 +33,35 @@ export class MainPageComponent implements OnInit, OnDestroy {
 
   myControl = new FormControl();
   projects: Observable<Project[]>;
-  tickets: Ticket[] = [];
+  tickets: Ticket[];
 
   pivotDate: Date;
+
   currentDates: Date[];
+  currentTotals: number[];
+
   expandedProjectId: string;
   getTimesheetsSubscription: Subscription;
   getTicketsSubscription: Subscription;
 
+  projectTicketsLoaded: boolean;
+
   constructor(
     private projectService: ProjectService,
-    private timesheetService: TimesheetService
+    private timesheetService: TimesheetService,
+    private dialog: MatDialog
   ) {
   }
 
   ngOnInit() {
     this.projects = this.projectService.loadAll();
-
     this.pivotDate = new Date();
     this.setDates();
   }
 
   ngOnDestroy(): void {
-    this.getTimesheetsSubscription.unsubscribe();
-    this.getTicketsSubscription.unsubscribe();
+    // this.getTimesheetsSubscription.unsubscribe();
+    // this.getTicketsSubscription.unsubscribe();
   }
 
   isGroup(index, item): boolean {
@@ -82,8 +91,12 @@ export class MainPageComponent implements OnInit, OnDestroy {
     this.loadTimesheets(this.expandedProjectId);
   }
 
-  projectExpanded(projectId: string, isExpanded: boolean) {
-    if (!isExpanded) { return; }
+  async projectExpanded(projectId: string, isExpanded: boolean) {
+    if (!isExpanded) {
+      this.tickets = null;
+      return;
+    }
+    await delay(200);
     this.expandedProjectId = projectId;
     this.loadTimesheets(this.expandedProjectId);
   }
@@ -110,22 +123,46 @@ export class MainPageComponent implements OnInit, OnDestroy {
       return t;
     };
 
+    const getTotals = (dates: Date[], tickets: Ticket[]): number[] => {
+      const dateTimesheets = (date: Date) => {
+        let acc = 0;
+        tickets.forEach(ticket => ticket.timesheets.forEach(timesheet => {
+
+          if (timesheet.loggedtime !== 0 && timesheet.date.getTime() === date.getTime()) {
+            acc = acc + timesheet.loggedtime;
+          }
+        }));
+        return acc;
+      };
+      return dates.map(date => dateTimesheets(date));
+    };
+
     this.getTicketsSubscription = this.projects
       .pipe(
 
-        // getting tickets
         map(projects => projects.find(project => project.id === projectId).tickets),
 
-        // chaining api calls with flatMap
         flatMap(tickets => {
           this.tickets = tickets;
-          console.log(tickets);
           return this.timesheetService.getTimesheets(projectId);
         }))
 
       .subscribe(timesheets => {
         console.log(timesheets);
         this.tickets = this.tickets.map(ticket => mergeTimesheetFunction(ticket, timesheets));
+
+        console.log(this.tickets);
+        this.currentTotals = getTotals(this.currentDates, this.tickets);
       });
+  }
+
+  editTimesheet(timesheet: Timesheet, index: number) {
+    const dialogRef = this.dialog.open(EditTimesheetComponent, {
+      width: '450px',
+      data: {
+        timesheet,
+        total: this.currentTotals[index]
+      }
+    });
   }
 }

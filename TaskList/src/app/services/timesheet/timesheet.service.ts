@@ -6,6 +6,8 @@ import { HttpClientHelper } from 'src/app/helpers/http-client-helper';
 import { GetTimesheetResponse } from './contracts/gettimesheetresponse';
 import { Timesheet } from 'src/app/model/project/timesheet';
 import { map } from 'rxjs/operators';
+import { PostTimesheetRequest } from './contracts/postimesheetrequest';
+import { PutTimesheetRequest } from './contracts/puttimesheetrequest';
 
 @Injectable({
   providedIn: 'root'
@@ -47,11 +49,31 @@ export class TimesheetService {
       .pipe(map(timesheets => timesheets.map(timesheet => mapTimesheetFunction(timesheet))));
   }
 
-  addTimesheet(timesheetId: string, timesheet: Timesheet) {
-    // TODO
+  addTimesheet(timesheet: Timesheet) {
+    const request: PostTimesheetRequest = {
+      _id: timesheet.id,
+      comment: timesheet.comment,
+      date: timesheet.date.toISOString().slice(0, 10),
+      logged_time: timesheet.loggedtime,
+      ticket: timesheet.ticketid
+    };
+
+    // TODO request
   }
 
-  editTimesheet(timesheetId: string, timesheet: Timesheet) {
+  updateTimesheet(timesheet: Timesheet) {
+    if (timesheet.id === '') {
+      this.addTimesheet(timesheet);
+      return;
+    }
 
+    const request: PutTimesheetRequest = {
+      comment: timesheet.comment,
+      date: timesheet.date.toISOString().slice(0, 10),
+      logged_time: timesheet.loggedtime,
+      ticket: timesheet.ticketid
+    };
+
+    // TODO request
   }
 }

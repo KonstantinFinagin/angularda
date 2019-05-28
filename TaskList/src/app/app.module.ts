@@ -18,6 +18,8 @@ import { JwtInterceptor } from './helpers/jwt.interceptor';
 import { WelcomeComponent } from './components/welcome/welcome.component';
 import { ErrorComponent } from './components/error/error.component';
 import { ProjectService } from './services/project/project.service';
+import { SmoothHeightComponent } from './helpers/smooth-height.component';
+import { EditTimesheetComponent } from './components/main-page/edit-timesheet/edit-timesheet.component';
 
 @NgModule({
   declarations: [
@@ -29,6 +31,8 @@ import { ProjectService } from './services/project/project.service';
     RegisterComponent,
     WelcomeComponent,
     ErrorComponent,
+    SmoothHeightComponent,
+    EditTimesheetComponent
   ],
   imports: [
     AuthenticationModule,
@@ -41,6 +45,9 @@ import { ProjectService } from './services/project/project.service';
     HttpClientModule,
     FormsModule,
     ReactiveFormsModule
+  ],
+  entryComponents: [
+    EditTimesheetComponent
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
