@@ -1,10 +1,15 @@
-<div class="margin-header">
-<mat-form-field>
-  <mat-label>Select Project:</mat-label>
-  <mat-select [(value)]="currentProject" (selectionChange)="projectChanged($event.value)">
-    <mat-option [value]="project" *ngFor="let project of projects | async">{{project.name}}</mat-option>
-  </mat-select>
-</mat-form-field>
+<div>
+  <mat-form-field class="margin-header">
+    <mat-label>Select Project:</mat-label>
+    <mat-select [(value)]="currentProject" (selectionChange)="projectChanged($event.value)">
+      <mat-option [value]="project" *ngFor="let project of projects | async">{{project.name}}</mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <button mat-button class="margin-header">
+    <mat-icon>add</mat-icon> New ticket
+  </button>
+
 </div>
 
 <div class="example-container" *ngFor="let status of ticketStatuses; let i = index">

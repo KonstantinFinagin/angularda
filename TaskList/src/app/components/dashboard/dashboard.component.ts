@@ -32,15 +32,15 @@ export class DashboardComponent implements OnInit {
     this.statusTickets = {};
 
     this.loadProjects();
-    this.initializeTickets();
   }
 
   loadProjects() {
     this.projects = this.projectService.loadAll();
   }
 
-  initializeTickets() {
+  initializeTickets(project: Project) {
 
+    this.ticketStatuses = [];
     for (const s in TicketStatus) {
 
       if (typeof(TicketStatus[s]) === 'number') {
@@ -48,12 +48,7 @@ export class DashboardComponent implements OnInit {
         const ticketStatusNum = parseInt(TicketStatus[s], 10);
         const ticketStatusString = s;
 
-        // TODO load tickets from the service
-        const tickets: Ticket[] = [
-          { id: s + '1', name: s + '1', status: ticketStatusNum, project: 'testProject', timesheets: [] },
-          { id: s + '2', name: s + '2', status: ticketStatusNum, project: 'testProject', timesheets: [] },
-          { id: s + '3', name: s + '3', status: ticketStatusNum, project: 'testProject', timesheets: [] },
-        ];
+        const tickets = project.tickets.filter(ticket => ticket.status === ticketStatusNum);
 
         this.ticketStatuses.push(ticketStatusString);
         this.statusTickets[ticketStatusString] = tickets;
@@ -63,8 +58,8 @@ export class DashboardComponent implements OnInit {
     console.log(this.statusTickets);
   }
 
-  projectChanged() {
-
+  projectChanged(project: Project) {
+    this.initializeTickets(project);
   }
 
   getStatusTicketsLength() {
