@@ -2,8 +2,8 @@
 <mat-dialog-content class="container">
 
   <mat-form-field>
-    <input matInput placeholder="Hours" [formControl] = "loggedtime" [(ngModel)]="timesheet.loggedtime">
-    <mat-error *ngIf="loggedtime.invalid">Total logged time should be a number and not exceed 24h for a day</mat-error>
+    <input matInput placeholder="Hours" [formControl] = "loggedtime" [(ngModel)]="timesheet.loggedtime" onlyNumber=true>
+    <mat-error *ngIf="loggedtime.invalid">Max 24h for a day</mat-error>
   </mat-form-field>
 
   <mat-form-field>

@@ -29,7 +29,7 @@ export class EditTimesheetComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.timesheet = this.data.timesheet;
+    this.timesheet = Object.assign({}, this.data.timesheet);
   }
 
   calculateMaxTimeCanWrite(total: number): number {
@@ -37,11 +37,13 @@ export class EditTimesheetComponent implements OnInit {
   }
 
   save() {
-    console.log(this.timesheet);
 
     this.timesheetService.updateTimesheet(this.timesheet).subscribe(id => {
-      console.log(id);
       this.timesheet.id = id;
+
+      this.data.timesheet.id = id;
+      this.data.timesheet.loggedtime = this.timesheet.loggedtime;
+      this.data.timesheet.comment = this.timesheet.comment;
     });
 
     this.dialogRef.close(this.timesheet);

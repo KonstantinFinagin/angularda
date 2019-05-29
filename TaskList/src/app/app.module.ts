@@ -20,6 +20,7 @@ import { ErrorComponent } from './components/error/error.component';
 import { ProjectService } from './services/project/project.service';
 import { SmoothHeightComponent } from './helpers/smooth-height.component';
 import { EditTimesheetComponent } from './components/main-page/edit-timesheet/edit-timesheet.component';
+import { OnlyNumberDirective } from './helpers/onlynumber.directive';
 
 @NgModule({
   declarations: [
@@ -32,7 +33,8 @@ import { EditTimesheetComponent } from './components/main-page/edit-timesheet/ed
     WelcomeComponent,
     ErrorComponent,
     SmoothHeightComponent,
-    EditTimesheetComponent
+    EditTimesheetComponent,
+    OnlyNumberDirective
   ],
   imports: [
     AuthenticationModule,

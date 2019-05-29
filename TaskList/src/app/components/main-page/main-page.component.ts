@@ -69,23 +69,29 @@ export class MainPageComponent implements OnInit, OnDestroy {
   }
 
   setDates() {
+
+    console.log(this.pivotDate);
     this.currentDates = [-6, -5, -4, -3, -2, -1, 0].map(days => {
       const date = new Date();
       date.setDate(this.pivotDate.getDate() + days);
+      date.setMonth(this.pivotDate.getMonth());
+      date.setFullYear(this.pivotDate.getFullYear());
       date.setHours(0, 0, 0, 0);
       return date;
     });
   }
 
   pivotDateIncrease() {
-    this.pivotDate.setDate(this.pivotDate.getDate() + 7);
+    const newDate = this.pivotDate.getDate() + 7;
+    this.pivotDate.setDate(newDate);
     this.pivotDate.setHours(0, 0, 0, 0);
     this.setDates();
     this.loadTimesheets(this.expandedProjectId);
   }
 
   pivotDateDecrease() {
-    this.pivotDate.setDate(this.pivotDate.getDate() - 7);
+    const newDate = this.pivotDate.getDate() - 7;
+    this.pivotDate.setDate(newDate);
     this.pivotDate.setHours(0, 0, 0, 0);
     this.setDates();
     this.loadTimesheets(this.expandedProjectId);
@@ -148,10 +154,7 @@ export class MainPageComponent implements OnInit, OnDestroy {
         }))
 
       .subscribe(timesheets => {
-        console.log(timesheets);
         this.tickets = this.tickets.map(ticket => mergeTimesheetFunction(ticket, timesheets));
-
-        console.log(this.tickets);
         this.currentTotals = getTotals(this.currentDates, this.tickets);
       });
   }
