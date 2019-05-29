@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
 import { Ticket } from 'src/app/model/project/ticket';
 import { Observable, BehaviorSubject } from 'rxjs';
 import { HttpClientHelper } from 'src/app/helpers/http-client-helper';
@@ -18,16 +17,11 @@ export class TimesheetService {
 
   private ticketsSubject: BehaviorSubject<Ticket[]>;
 
-  private dataStore: {
-    tickets: Ticket[];
-  };
-
   get tickets(): Observable<Ticket[]> {
     return this.ticketsSubject.asObservable();
   }
 
   constructor(private http: HttpClientHelper) {
-    this.dataStore = { tickets: [] };
   }
 
   getTimesheets(projectId: string): Observable<Timesheet[]> {
