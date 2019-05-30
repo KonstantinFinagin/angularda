@@ -21,6 +21,8 @@ export class DashboardComponent implements OnInit {
 
   statusTickets: { [key: string]: Ticket[] };
   ticketStatuses: string[] = [];
+  highlightedColumns: boolean[];
+
   elementName = 'ddlist';
 
   constructor(
@@ -30,7 +32,6 @@ export class DashboardComponent implements OnInit {
 
   ngOnInit() {
     this.statusTickets = {};
-
     this.loadProjects();
   }
 
@@ -55,7 +56,7 @@ export class DashboardComponent implements OnInit {
       }
     }
 
-    console.log(this.statusTickets);
+    this.highlightedColumns = this.ticketStatuses.map(() => false);
   }
 
   projectChanged(project: Project) {
@@ -66,7 +67,7 @@ export class DashboardComponent implements OnInit {
     return Object.keys(this.statusTickets).length;
   }
 
-  getIndexValue = (i: number): number[] => {
+  getConnectedIndexes = (i: number): number[] => {
 
     if (i === TicketStatus.Open) { return [TicketStatus.Development]; }
     if (i === TicketStatus.Development) { return [TicketStatus.Open, TicketStatus.ReadyForQA]; }
@@ -76,11 +77,10 @@ export class DashboardComponent implements OnInit {
   }
 
   getConnectedTo(i: number) {
-    return this.getIndexValue(i).map(value => this.elementName + value);
+    return this.getConnectedIndexes(i).map(value => this.elementName + value);
   }
 
   getConnectedToByName(name: string) {
-    console.log(name);
     const index = parseInt(name.substring(this.elementName.length), 10);
     return this.getConnectedTo(index);
   }
@@ -99,5 +99,13 @@ export class DashboardComponent implements OnInit {
                         event.previousIndex,
                         event.currentIndex);
     }
+  }
+
+  ticketDragStarted(statusIndex: number) {
+    const connectedIndexes = this.getConnectedIndexes(statusIndex);
+    this.highlightedColumns = this.ticketStatuses.map((value, index) => connectedIndexes.indexOf(index + 1) !== -1);
+  }
+  ticketDragEnded() {
+    this.highlightedColumns = this.ticketStatuses.map(() => false);
   }
 }
