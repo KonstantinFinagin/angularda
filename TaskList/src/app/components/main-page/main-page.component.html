@@ -1,8 +1,4 @@
-<form class="example-form">
-  <mat-form-field class="example-full-width">
-    <input matInput placeholder="Filter by project" value="">
-  </mat-form-field>
-</form>
+<h2 class="mat-h2 margin-header">Project timesheets</h2>
 
 <mat-accordion>
   <mat-expansion-panel *ngFor="let project of projects | async" (expandedChange)="projectExpanded(project.id, $event)">
@@ -47,7 +43,7 @@
           <mat-grid-tile></mat-grid-tile>
           <mat-grid-tile *ngFor="let timesheet of ticket.timesheets; let i = index">
             <button mat-button (click)="editTimesheet(timesheet, i)">
-              <h4 [class.greyed-out]="timesheet.loggedtime === 0">{{timesheet.loggedtime}}</h4>
+              <h4 [class.greyed-out]="timesheet.loggedtime === 0">{{timesheet.loggedtime}}<mat-icon *ngIf="timesheet.comment !== ''">chat</mat-icon></h4>
             </button>
           </mat-grid-tile>
           <mat-grid-tile></mat-grid-tile>

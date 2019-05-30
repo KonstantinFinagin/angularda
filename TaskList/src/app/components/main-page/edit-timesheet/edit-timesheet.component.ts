@@ -23,7 +23,7 @@ export class EditTimesheetComponent implements OnInit {
     private dialogRef: MatDialogRef<EditTimesheetComponent>,
     private timesheetService: TimesheetService) {
 
-    this.maxTimeToLog = this.calculateMaxTimeCanWrite(this.data.total);
+    this.maxTimeToLog = this.calculateMaxTimeCanWrite(this.data.total, this.data.timesheet.loggedtime);
     this.loggedtime = new FormControl('', [Validators.required, NumberValidators.range(0, this.maxTimeToLog)]);
     this.comment = new FormControl('', [Validators.maxLength(1000)]);
   }
@@ -32,8 +32,9 @@ export class EditTimesheetComponent implements OnInit {
     this.timesheet = Object.assign({}, this.data.timesheet);
   }
 
-  calculateMaxTimeCanWrite(total: number): number {
-    return 24 - total;
+  calculateMaxTimeCanWrite(total: number, logged: number): number {
+    const result = 24 - total + logged;
+    return result;
   }
 
   save() {

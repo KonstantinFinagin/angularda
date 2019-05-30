@@ -21,6 +21,8 @@ import { ProjectService } from './services/project/project.service';
 import { SmoothHeightComponent } from './helpers/smooth-height.component';
 import { EditTimesheetComponent } from './components/main-page/edit-timesheet/edit-timesheet.component';
 import { OnlyNumberDirective } from './helpers/onlynumber.directive';
+import { DragDropModule } from '@angular/cdk/drag-drop';
+import { NewTicketComponent } from './components/dashboard/new-ticket/new-ticket.component';
 
 @NgModule({
   declarations: [
@@ -34,12 +36,14 @@ import { OnlyNumberDirective } from './helpers/onlynumber.directive';
     ErrorComponent,
     SmoothHeightComponent,
     EditTimesheetComponent,
-    OnlyNumberDirective
+    OnlyNumberDirective,
+    NewTicketComponent
   ],
   imports: [
     AuthenticationModule,
     BrowserModule,
     BrowserAnimationsModule,
+    DragDropModule,
     MaterialModule,
     ReactiveFormsModule,
     routing,
@@ -49,7 +53,8 @@ import { OnlyNumberDirective } from './helpers/onlynumber.directive';
     ReactiveFormsModule
   ],
   entryComponents: [
-    EditTimesheetComponent
+    EditTimesheetComponent,
+    NewTicketComponent
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },

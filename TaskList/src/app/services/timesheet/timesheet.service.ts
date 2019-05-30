@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
 import { Ticket } from 'src/app/model/project/ticket';
 import { Observable, BehaviorSubject } from 'rxjs';
 import { HttpClientHelper } from 'src/app/helpers/http-client-helper';
@@ -10,6 +9,7 @@ import { PostTimesheetRequest } from './contracts/postimesheetrequest';
 import { PutTimesheetRequest } from './contracts/puttimesheetrequest';
 import { PostTimesheetResponse } from './contracts/posttimesheetresponse';
 import { PutTimesheetResponse } from './contracts/puttimesheetresponse';
+import { DateHelper } from 'src/app/helpers/datehelper';
 
 @Injectable({
   providedIn: 'root'
@@ -18,16 +18,11 @@ export class TimesheetService {
 
   private ticketsSubject: BehaviorSubject<Ticket[]>;
 
-  private dataStore: {
-    tickets: Ticket[];
-  };
-
   get tickets(): Observable<Ticket[]> {
     return this.ticketsSubject.asObservable();
   }
 
   constructor(private http: HttpClientHelper) {
-    this.dataStore = { tickets: [] };
   }
 
   getTimesheets(projectId: string): Observable<Timesheet[]> {
@@ -60,7 +55,7 @@ export class TimesheetService {
     const request: PostTimesheetRequest = {
       _id: timesheet.id,
       comment: timesheet.comment,
-      date: this.getShortIsoDate(timesheet.date),
+      date: DateHelper.getShortIsoDate(timesheet.date),
       logged_time: timesheet.loggedtime,
       ticket: timesheet.ticketid
     };
@@ -81,7 +76,7 @@ export class TimesheetService {
     const request: PutTimesheetRequest = {
       _id: timesheet.id,
       comment: timesheet.comment,
-      date: this.getShortIsoDate(timesheet.date),
+      date: DateHelper.getShortIsoDate(timesheet.date),
       logged_time: timesheet.loggedtime,
       ticket: timesheet.ticketid
     };
@@ -89,9 +84,5 @@ export class TimesheetService {
     console.log(request);
 
     return this.http.put<PutTimesheetResponse>('timesheets', request).pipe(map(response => response._id));
-  }
-
-  private getShortIsoDate(date: Date) {
-    return new Date(date.getTime() - (date.getTimezoneOffset() * 60000)).toISOString().slice(0, 10);
   }
 }

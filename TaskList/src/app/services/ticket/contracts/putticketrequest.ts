@@ -1,4 +1,4 @@
-export interface GetProjectTicketResponse {
+export interface PutTicketRequest {
     _id: string;
     name: string;
     description: string;
@@ -6,8 +6,8 @@ export interface GetProjectTicketResponse {
     start_date: string;
     end_date: string;
     status: number;
-    responsible: string;
+    responsible: any;
     type: number;
-    project: string;
-    reporter: string;
+    project: any;
+    reporter: any;
 }

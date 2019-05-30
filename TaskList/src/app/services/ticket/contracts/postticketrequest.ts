@@ -1,13 +1,12 @@
-export interface GetProjectTicketResponse {
-    _id: string;
+export interface PostTicketRequest {
     name: string;
     description: string;
     estimate: number;
     start_date: string;
     end_date: string;
     status: number;
-    responsible: string;
+    responsible: any;
     type: number;
-    project: string;
-    reporter: string;
+    project: any;
+    reporter: any;
 }
