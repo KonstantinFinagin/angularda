@@ -43,7 +43,7 @@
           <mat-grid-tile></mat-grid-tile>
           <mat-grid-tile *ngFor="let timesheet of ticket.timesheets; let i = index">
             <button mat-button (click)="editTimesheet(timesheet, i)">
-              <h4 [class.greyed-out]="timesheet.loggedtime === 0">{{timesheet.loggedtime}}</h4>
+              <h4 [class.greyed-out]="timesheet.loggedtime === 0">{{timesheet.loggedtime}}<mat-icon *ngIf="timesheet.comment !== ''">chat</mat-icon></h4>
             </button>
           </mat-grid-tile>
           <mat-grid-tile></mat-grid-tile>
