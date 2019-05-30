@@ -48,10 +48,6 @@ export class TimesheetService {
 
   addTimesheet(timesheet: Timesheet): Observable<PostTimesheetResponse> {
 
-    console.log('service: adding timesheet');
-
-    console.log(timesheet);
-
     const request: PostTimesheetRequest = {
       _id: timesheet.id,
       comment: timesheet.comment,
@@ -59,8 +55,6 @@ export class TimesheetService {
       logged_time: timesheet.loggedtime,
       ticket: timesheet.ticketid
     };
-
-    console.log(request);
 
     return this.http.post<PostTimesheetResponse>('timesheets', request);
   }
@@ -70,8 +64,6 @@ export class TimesheetService {
     if (timesheet.id === '') {
       return this.addTimesheet(timesheet).pipe(map(response => response._id));
     }
-    console.log('service: updating timesheet');
-    console.log(timesheet);
 
     const request: PutTimesheetRequest = {
       _id: timesheet.id,
@@ -80,8 +72,6 @@ export class TimesheetService {
       logged_time: timesheet.loggedtime,
       ticket: timesheet.ticketid
     };
-
-    console.log(request);
 
     return this.http.put<PutTimesheetResponse>('timesheets', request).pipe(map(response => response._id));
   }

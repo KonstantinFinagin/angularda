@@ -5,7 +5,7 @@ import { Project } from 'src/app/model/project/project';
 import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 import { TicketStatus } from 'src/app/model/project/ticketstatusenum';
 import { ProjectService } from 'src/app/services/project/project.service';
-import { Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { NewTicketComponent } from './new-ticket/new-ticket.component';
 import { MatDialog } from '@angular/material';
 
@@ -24,6 +24,8 @@ export class DashboardComponent implements OnInit {
   statusTickets: { [key: string]: Ticket[] };
   ticketStatuses: string[] = [];
   highlightedColumns: boolean[];
+
+  subscriptions: Subscription[] = [];
 
   elementName = 'ddlist';
 
@@ -109,7 +111,7 @@ export class DashboardComponent implements OnInit {
 
       const ticket = event.item.data as Ticket;
       ticket.status = this.getIndexByName(event.container.id);
-      this.ticketService.updateTicketStatus(ticket).subscribe(data => {});
+      this.subscriptions[0] = this.ticketService.updateTicketStatus(ticket).subscribe(data => {});
     }
   }
 
@@ -130,10 +132,9 @@ export class DashboardComponent implements OnInit {
       }
     });
 
-    dialogRef.afterClosed().subscribe(result => {
+    this.subscriptions[1] = dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        console.log(result);
-        this.loadProjects().subscribe(projects => {
+        this.subscriptions[2] = this.loadProjects().subscribe(projects => {
           this.currentProject = projects.find(p => p.id === result.project);
           this.initializeTickets(this.currentProject);
         });

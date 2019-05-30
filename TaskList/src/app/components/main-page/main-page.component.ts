@@ -40,6 +40,8 @@ export class MainPageComponent implements OnInit, OnDestroy {
   currentDates: Date[];
   currentTotals: number[];
 
+  subscriptions: Subscription[] = [];
+
   expandedProjectId: string;
   getTimesheetsSubscription: Subscription;
   getTicketsSubscription: Subscription;
@@ -60,8 +62,8 @@ export class MainPageComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    // this.getTimesheetsSubscription.unsubscribe();
-    // this.getTicketsSubscription.unsubscribe();
+    this.subscriptions.forEach(s => s.unsubscribe());
+    this.subscriptions = [];
   }
 
   isGroup(index, item): boolean {
@@ -70,7 +72,6 @@ export class MainPageComponent implements OnInit, OnDestroy {
 
   setDates() {
 
-    console.log(this.pivotDate);
     this.currentDates = [-6, -5, -4, -3, -2, -1, 0].map(days => {
       const date = new Date();
       date.setDate(this.pivotDate.getDate() + days);
@@ -143,7 +144,7 @@ export class MainPageComponent implements OnInit, OnDestroy {
       return dates.map(date => dateTimesheets(date));
     };
 
-    this.getTicketsSubscription = this.projects
+    this.subscriptions[0] = this.getTicketsSubscription = this.projects
       .pipe(
 
         map(projects => projects.find(project => project.id === projectId).tickets),

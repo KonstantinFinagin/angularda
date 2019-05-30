@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { MatDialog } from '@angular/material';
 import { Router } from '@angular/router';
 import { LoginComponent } from '../../modules/authentication/components/login/login.component';
@@ -7,38 +7,45 @@ import { User } from 'src/app/model/users/user';
 import { first } from 'rxjs/operators';
 import { AuthenticationService } from 'src/app/services/authentication/authentication.service';
 import { LoginModel } from 'src/app/model/login/loginmodel';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-toolbar',
   templateUrl: './toolbar.component.html',
   styleUrls: ['./toolbar.component.scss']
 })
-export class ToolbarComponent implements OnInit {
+export class ToolbarComponent implements OnInit, OnDestroy {
+
 
   user: User;
+  subscriptions: Subscription[] = [];
 
   constructor(
     private dialog: MatDialog,
     private router: Router,
     private authenticationService: AuthenticationService
     ) {
-      this.authenticationService.currentUser.subscribe(currentUser => {
-        this.user = currentUser == null ? null : currentUser.user;
-      });
+
     }
 
   ngOnInit() {
+    this.subscriptions[0] = this.authenticationService.currentUser.subscribe(currentUser => {
+      this.user = currentUser == null ? null : currentUser.user;
+    });
+  }
+
+  ngOnDestroy(): void {
+    this.subscriptions.forEach(subscription => subscription.unsubscribe());
+    this.subscriptions = [];
   }
 
   openLoginDialog(): void {
-
-    console.log('Open login dialog');
 
     const dialogRef = this.dialog.open(LoginComponent, {
       width: '450px'
     });
 
-    dialogRef.afterClosed().subscribe(result => {
+    this.subscriptions[1] = dialogRef.afterClosed().subscribe(result => {
       if (result) {
         this.login(result);
       }
@@ -51,7 +58,7 @@ export class ToolbarComponent implements OnInit {
       width: '450px'
     });
 
-    dialogRef.afterClosed().subscribe(result => {
+    this.subscriptions[2] = dialogRef.afterClosed().subscribe(result => {
       if (result) {
       }
     });
@@ -66,8 +73,8 @@ export class ToolbarComponent implements OnInit {
   }
 
   login(loginModel: LoginModel): void {
-    console.log('Logging in');
-    this.authenticationService
+
+    this.subscriptions[3] = this.authenticationService
       .login(loginModel)
       .pipe(first())
       .subscribe(
@@ -75,7 +82,6 @@ export class ToolbarComponent implements OnInit {
           this.router.navigate(['/mainpage']);
         },
         error => {
-          console.log('error');
         }
       );
   }

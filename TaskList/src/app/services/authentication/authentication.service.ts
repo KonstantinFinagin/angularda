@@ -32,7 +32,6 @@ export class AuthenticationService {
     return this.http.post<LoginResponse>('employees/login', loginModel)
       .pipe(map(loginResponse => {
 
-        console.log(loginResponse);
         if (loginResponse && loginResponse.token) {
           localStorage.setItem('currentUser', JSON.stringify(loginResponse));
           this.currentUserSubject.next(loginResponse);
