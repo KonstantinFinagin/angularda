@@ -6,7 +6,7 @@ export interface GetTicketResponse {
     start_date: string;
     end_date: string;
     status: number;
-    responsbile: any;
+    responsible: any;
     type: number;
     project: any;
     reporter: any;

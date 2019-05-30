@@ -6,6 +6,8 @@ import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/dr
 import { TicketStatus } from 'src/app/model/project/ticketstatusenum';
 import { ProjectService } from 'src/app/services/project/project.service';
 import { Observable } from 'rxjs';
+import { NewTicketComponent } from './new-ticket/new-ticket.component';
+import { MatDialog } from '@angular/material';
 
 @Component({
   selector: 'app-dashboard',
@@ -27,7 +29,8 @@ export class DashboardComponent implements OnInit {
 
   constructor(
     private ticketService: TicketService,
-    private projectService: ProjectService) {
+    private projectService: ProjectService,
+    private dialog: MatDialog) {
     }
 
   ngOnInit() {
@@ -37,6 +40,7 @@ export class DashboardComponent implements OnInit {
 
   loadProjects() {
     this.projects = this.projectService.loadAll();
+    return this.projects;
   }
 
   initializeTickets(project: Project) {
@@ -115,5 +119,29 @@ export class DashboardComponent implements OnInit {
   }
   ticketDragEnded() {
     this.highlightedColumns = this.ticketStatuses.map(() => false);
+  }
+
+  openNewTicketDialog() {
+
+    const dialogRef = this.dialog.open(NewTicketComponent, {
+      width: '450px',
+      data: {
+        project: this.currentProject,
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        console.log(result);
+        this.loadProjects().subscribe(projects => {
+          this.currentProject = projects.find(p => p.id === result.project);
+          this.initializeTickets(this.currentProject);
+        });
+      }
+    });
+  }
+
+  customCompare(o1, o2) {
+    return o1.id === o2.id;
   }
 }

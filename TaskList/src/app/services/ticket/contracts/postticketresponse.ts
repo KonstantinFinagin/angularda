@@ -1,4 +1,4 @@
-export interface PutTicketRequest {
+export interface PostTicketResponse {
     _id: string;
     name: string;
     description: string;

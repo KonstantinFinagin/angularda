@@ -1,12 +1,14 @@
+<h2 class="mat-h2 margin-header">Ticket statuses dashboard</h2>
+
 <div>
   <mat-form-field class="margin-header">
     <mat-label>Select Project:</mat-label>
-    <mat-select [(value)]="currentProject" (selectionChange)="projectChanged($event.value)">
+    <mat-select [(ngModel)]="currentProject" [compareWith]="customCompare" (selectionChange)="projectChanged($event.value)">
       <mat-option [value]="project" *ngFor="let project of projects | async">{{project.name}}</mat-option>
     </mat-select>
   </mat-form-field>
 
-  <button mat-button class="margin-header">
+  <button mat-button class="margin-header" (click)="openNewTicketDialog()" *ngIf="currentProject">
     <mat-icon>add</mat-icon> New ticket
   </button>
 
@@ -29,7 +31,12 @@
         [cdkDragData]="item"
         (cdkDragStarted)="ticketDragStarted(i+1)"
         (cdkDragEnded)="ticketDragEnded()"
-        >{{item.name}}</div>
+        >
+        <section class="mat-typography">
+        <h4>{{item.name}}</h4>
+        {{item.description}}
+        </section>
+      </div>
     </div>
 </div>
 

@@ -7,6 +7,8 @@ import { Observable } from 'rxjs';
 import { mergeMap } from 'rxjs/operators';
 import { Ticket } from 'src/app/model/project/ticket';
 import { DateHelper } from 'src/app/helpers/datehelper';
+import { PostTicketResponse } from './contracts/postticketresponse';
+import { PostTicketRequest } from './contracts/postticketrequest';
 
 @Injectable({
   providedIn: 'root'
@@ -22,9 +24,6 @@ export class TicketService {
       mergeMap(getresponse => {
         const putrequest = getresponse as PutTicketRequest;
 
-        console.log(getresponse.status);
-        console.log('new status:' + ticket.status);
-
         putrequest.start_date = DateHelper.getShortIsoDate(ticket.startdate);
         putrequest.end_date = DateHelper.getShortIsoDate(ticket.enddate);
 
@@ -32,5 +31,23 @@ export class TicketService {
         return this.http.put<PutTicketResponse>(`tasks`, putrequest);
       })
     );
+  }
+
+  addTicket(t: Ticket) {
+
+    const postTicketRequest: PostTicketRequest = {
+      name: t.name,
+      description: t.description,
+      estimate: 0,
+      start_date: DateHelper.getShortIsoDate(t.startdate),
+      end_date: DateHelper.getShortIsoDate(t.enddate),
+      status: t.status,
+      responsible: null,
+      type: t.type,
+      project: t.project,
+      reporter: null
+    };
+
+    return this.http.post<PostTicketResponse>('tasks', postTicketRequest);
   }
 }
