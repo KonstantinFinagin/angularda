@@ -80,8 +80,12 @@ export class DashboardComponent implements OnInit {
     return this.getConnectedIndexes(i).map(value => this.elementName + value);
   }
 
+  getIndexByName(name: string) {
+    return parseInt(name.substring(this.elementName.length), 10);
+  }
+
   getConnectedToByName(name: string) {
-    const index = parseInt(name.substring(this.elementName.length), 10);
+    const index = this.getIndexByName(name);
     return this.getConnectedTo(index);
   }
 
@@ -98,6 +102,10 @@ export class DashboardComponent implements OnInit {
                         event.container.data,
                         event.previousIndex,
                         event.currentIndex);
+
+      const ticket = event.item.data as Ticket;
+      ticket.status = this.getIndexByName(event.container.id);
+      this.ticketService.updateTicketStatus(ticket).subscribe(data => {});
     }
   }
 

@@ -26,6 +26,7 @@
 
       <div class="example-box" *ngFor="let item of statusTickets[status]" 
         cdkDrag 
+        [cdkDragData]="item"
         (cdkDragStarted)="ticketDragStarted(i+1)"
         (cdkDragEnded)="ticketDragEnded()"
         >{{item.name}}</div>

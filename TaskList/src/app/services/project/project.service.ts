@@ -28,7 +28,14 @@ export class ProjectService {
         name: r.name,
         status: r.status,
         project: r.project,
-        timesheets: []
+        timesheets: [],
+        description: r.description,
+        startdate: new Date(r.start_date),
+        enddate: new Date(r.end_date),
+        estimate: r.estimate,
+        responsible: r.responsible,
+        type: r.type,
+        reporter: r.reporter
       };
       return t;
     };
