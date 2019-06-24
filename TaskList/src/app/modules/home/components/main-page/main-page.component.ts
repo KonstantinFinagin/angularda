@@ -9,7 +9,6 @@ import { find, map, flatMap, switchMap } from 'rxjs/operators';
 import { Timesheet } from 'src/app/model/project/timesheet';
 import { trigger, transition, style, animate } from '@angular/animations';
 import { delay } from 'q';
-import { tick } from '@angular/core/testing';
 import { MatDialog } from '@angular/material';
 import { EditTimesheetComponent } from './edit-timesheet/edit-timesheet.component';
 

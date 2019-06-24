@@ -1,8 +1,8 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { MatDialog } from '@angular/material';
 import { Router } from '@angular/router';
-import { LoginComponent } from '../../modules/authentication/components/login/login.component';
-import { RegisterComponent } from '../../modules/authentication/components/register/register.component';
+import { LoginComponent } from '../../authentication/components/login/login.component';
+import { RegisterComponent } from '../../authentication/components/register/register.component';
 import { User } from 'src/app/model/users/user';
 import { first } from 'rxjs/operators';
 import { AuthenticationService } from 'src/app/services/authentication/authentication.service';
