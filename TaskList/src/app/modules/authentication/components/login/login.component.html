@@ -9,8 +9,8 @@
     </mat-form-field>
 
     <mat-form-field>
-      <input type="password" matInput placeholder="EMail" [formControl]="email" [(ngModel)]="loginModel.password" required>
-      <mat-error *ngIf="password.invalid">{{getErrorMessage()}}</mat-error>
+      <input type="password" matInput placeholder="Password" [formControl]="password" [(ngModel)]="loginModel.password" required>
+      <mat-error *ngIf="password.invalid">Password required</mat-error>
     </mat-form-field>
   </div>
 </mat-dialog-content>
