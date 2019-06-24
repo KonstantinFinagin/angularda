@@ -21,7 +21,7 @@ export class DashboardComponent implements OnInit {
   projects: Observable<Project[]>;
   currentProject: Project;
 
-  statusTickets: { [key: string]: Ticket[] };
+  statusTickets: { [key: string]: Ticket[] } = {};
   ticketStatuses: string[] = [];
   highlightedColumns: boolean[];
 
@@ -36,7 +36,6 @@ export class DashboardComponent implements OnInit {
     }
 
   ngOnInit() {
-    this.statusTickets = {};
     this.loadProjects();
   }
 
