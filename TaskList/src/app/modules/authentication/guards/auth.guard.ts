@@ -30,10 +30,8 @@ export class AuthGuard implements CanActivate, OnDestroy {
       return true;
     } else {
       this.openLoginDialog();
+      return false;
     }
-
-    this.router.navigate(['']);
-    return false;
   }
 
   openLoginDialog(): void {

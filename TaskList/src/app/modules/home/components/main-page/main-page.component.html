@@ -1,6 +1,6 @@
-<h2 class="mat-h2 margin-header">Project timesheets</h2>
+<h2 class="mat-h2 margin-header" *ngIf="user">Project timesheets</h2>
 
-<mat-accordion>
+<mat-accordion *ngIf="user">
   <mat-expansion-panel *ngFor="let project of projects | async" (expandedChange)="projectExpanded(project.id, $event)">
     <mat-expansion-panel-header>
       <mat-panel-title class="mat-expansion-panel-header-title">

@@ -11,6 +11,8 @@ import { trigger, transition, style, animate } from '@angular/animations';
 import { delay } from 'q';
 import { MatDialog } from '@angular/material';
 import { EditTimesheetComponent } from './edit-timesheet/edit-timesheet.component';
+import { AuthenticationService } from 'src/app/services/authentication/authentication.service';
+import { User } from 'src/app/model/users/user';
 
 @Component({
   selector: 'app-main-page',
@@ -46,8 +48,10 @@ export class MainPageComponent implements OnInit, OnDestroy {
   getTicketsSubscription: Subscription;
 
   projectTicketsLoaded: boolean;
+  user: User;
 
   constructor(
+    private authenticationService: AuthenticationService,
     private projectService: ProjectService,
     private timesheetService: TimesheetService,
     private dialog: MatDialog
@@ -55,6 +59,10 @@ export class MainPageComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+    this.subscriptions[0] = this.authenticationService.currentUser.subscribe(currentUser => {
+      this.user = currentUser == null ? null : currentUser.user;
+    });
+
     this.projects = this.projectService.loadAll();
     this.pivotDate = new Date();
     this.setDates();
@@ -143,7 +151,7 @@ export class MainPageComponent implements OnInit, OnDestroy {
       return dates.map(date => dateTimesheets(date));
     };
 
-    this.subscriptions[0] = this.getTicketsSubscription = this.projects
+    this.subscriptions[1] = this.getTicketsSubscription = this.projects
       .pipe(
 
         map(projects => projects.find(project => project.id === projectId).tickets),
