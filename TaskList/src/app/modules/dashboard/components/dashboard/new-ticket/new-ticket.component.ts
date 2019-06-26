@@ -1,10 +1,11 @@
 import { Component, OnInit, Inject, OnDestroy } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
-import { FormControl, Validators } from '@angular/forms';
+import { FormControl, Validators, FormBuilder, FormGroup } from '@angular/forms';
 import { Ticket } from 'src/app/model/project/ticket';
 import { Project } from 'src/app/model/project/project';
 import { TicketService } from 'src/app/services/ticket/ticket.service';
 import { TicketStatus } from 'src/app/model/project/ticketstatusenum';
+import { TouchSequence } from 'selenium-webdriver';
 
 @Component({
   selector: 'app-new-ticket',
@@ -19,13 +20,13 @@ export class NewTicketComponent implements OnInit {
   project: Project;
   newTicket: Ticket;
 
+  form: FormGroup;
+
   constructor(
+    private fb: FormBuilder,
     @Inject(MAT_DIALOG_DATA) public data: any,
     private dialogRef: MatDialogRef<NewTicketComponent>,
     private ticketService: TicketService) {
-
-    this.ticketName = new FormControl('', [Validators.required, Validators.maxLength(500)]);
-    this.ticketDescription = new FormControl('', [Validators.maxLength(500)]);
   }
 
   ngOnInit() {
@@ -36,6 +37,14 @@ export class NewTicketComponent implements OnInit {
     this.newTicket.startdate = new Date();
     this.newTicket.enddate = new Date();
     this.newTicket.status = TicketStatus.Open;
+
+    this.ticketName = new FormControl(this.newTicket.name, [Validators.required, Validators.maxLength(500)]);
+    this.ticketDescription = new FormControl(this.newTicket.description, [Validators.maxLength(500)]);
+
+    this.form = this.fb.group({
+      ticketName: this.ticketName,
+      ticketDescription: this.ticketDescription
+    });
   }
 
   getTicketName(project: Project): string {
@@ -52,6 +61,9 @@ export class NewTicketComponent implements OnInit {
   }
 
   save() {
+    this.newTicket.name = this.form.value.ticketName;
+    this.newTicket.description = this.form.value.ticketDescription;
+
     this.ticketService.addTicket(this.newTicket).subscribe(ticket => this.dialogRef.close(ticket));
   }
 

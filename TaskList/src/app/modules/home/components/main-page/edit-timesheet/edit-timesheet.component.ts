@@ -1,6 +1,6 @@
 import { Component, OnInit, Inject, OnDestroy } from '@angular/core';
 import { Timesheet } from 'src/app/model/project/timesheet';
-import { FormControl, Validators } from '@angular/forms';
+import { FormControl, Validators, FormBuilder, FormGroup } from '@angular/forms';
 import { TimesheetService } from 'src/app/services/timesheet/timesheet.service';
 import { MatDialogRef } from '@angular/material';
 import { MAT_DIALOG_DATA } from '@angular/material';
@@ -21,18 +21,28 @@ export class EditTimesheetComponent implements OnInit, OnDestroy {
 
   subscriptions: Subscription[] = [];
 
+  form: FormGroup;
+
   constructor(
+    private fb: FormBuilder,
     @Inject(MAT_DIALOG_DATA) public data: any,
     private dialogRef: MatDialogRef<EditTimesheetComponent>,
     private timesheetService: TimesheetService) {
 
     this.maxTimeToLog = this.calculateMaxTimeCanWrite(this.data.total, this.data.timesheet.loggedtime);
-    this.loggedtime = new FormControl('', [Validators.required, NumberValidators.range(0, this.maxTimeToLog)]);
-    this.comment = new FormControl('', [Validators.maxLength(1000)]);
+
   }
 
   ngOnInit() {
-    this.timesheet = Object.assign({}, this.data.timesheet);
+    this.timesheet = {...this.data.timesheet};
+
+    this.loggedtime = new FormControl(this.timesheet.loggedtime, [Validators.required, NumberValidators.range(0, this.maxTimeToLog)]);
+    this.comment = new FormControl('', [Validators.maxLength(1000)]);
+
+    this.form = this.fb.group({
+      loggedtime: this.loggedtime,
+      comment: this.comment
+    });
   }
 
   ngOnDestroy() {

@@ -1,14 +1,14 @@
 <h2 mat-dialog-title>Edit timesheet</h2>
-<form class="container" (ngSubmit)="save()">
+<form class="container" (ngSubmit)="save()" [formGroup]="form">
   <mat-dialog-content class="container">
 
     <mat-form-field>
-      <input matInput placeholder="Hours" [formControl]="loggedtime" [(ngModel)]="timesheet.loggedtime" onlyNumber=true>
+      <input matInput placeholder="Hours" formControlName="loggedtime" onlyNumber=true>
       <mat-error *ngIf="loggedtime.invalid">Max 24h for a day</mat-error>
     </mat-form-field>
     <br />
     <mat-form-field>
-      <textarea matInput placeholder="Comment" [formControl]="comment" [(ngModel)]="timesheet.comment"></textarea>
+      <textarea matInput placeholder="Comment" formControlName="comment" ></textarea>
       <mat-error *ngIf="comment.invalid">Max 1000 symbols</mat-error>
 
     </mat-form-field>

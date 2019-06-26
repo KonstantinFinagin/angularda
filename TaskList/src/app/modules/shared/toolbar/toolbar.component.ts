@@ -70,10 +70,4 @@ export class ToolbarComponent implements OnInit, OnDestroy {
     this.authenticationService.logout();
     this.router.navigate(['/']);
   }
-
-  register(username: string, password: string) {
-    this.authenticationService
-      .register(username, password);
-  }
-
 }
