@@ -118,7 +118,7 @@ export class DashboardComponent implements OnInit {
 
   ticketDragStarted(statusIndex: number) {
     const connectedIndexes = this.getConnectedIndexes(statusIndex);
-    this.highlightedColumns = this.ticketStatuses.map((value, index) => connectedIndexes.indexOf(index + 1) !== -1);
+    this.highlightedColumns = this.ticketStatuses.map((value, index) => connectedIndexes.includes(index + 1));
   }
   ticketDragEnded() {
     this.highlightedColumns = this.ticketStatuses.map(() => false);

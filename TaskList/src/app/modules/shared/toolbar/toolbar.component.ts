@@ -52,26 +52,6 @@ export class ToolbarComponent implements OnInit, OnDestroy {
     });
   }
 
-  openRegisterDialog() {
-
-    const dialogRef = this.dialog.open(RegisterComponent, {
-      width: '450px'
-    });
-
-    this.subscriptions[2] = dialogRef.afterClosed().subscribe(result => {
-      if (result) {
-      }
-    });
-  }
-
-  navigateMainPage() {
-    this.router.navigate(['/mainpage']);
-  }
-
-  navigateDashboard() {
-    this.router.navigate(['/dashboard']);
-  }
-
   login(loginModel: LoginModel): void {
 
     this.subscriptions[3] = this.authenticationService
