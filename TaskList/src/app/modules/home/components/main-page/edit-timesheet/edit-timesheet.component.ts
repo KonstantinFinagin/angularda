@@ -12,6 +12,7 @@ import { Subscription } from 'rxjs';
   templateUrl: './edit-timesheet.component.html',
   styleUrls: ['./edit-timesheet.component.scss']
 })
+
 export class EditTimesheetComponent implements OnInit, OnDestroy {
 
   maxTimeToLog: number;
