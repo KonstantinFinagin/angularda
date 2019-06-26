@@ -80,11 +80,11 @@ export class MainPageComponent implements OnInit, OnDestroy {
   setDates() {
 
     this.currentDates = [-6, -5, -4, -3, -2, -1, 0].map(days => {
-      const date = new Date();
-      date.setDate(this.pivotDate.getDate() + days);
-      date.setMonth(this.pivotDate.getMonth());
-      date.setFullYear(this.pivotDate.getFullYear());
-      date.setHours(0, 0, 0, 0);
+      const date = new Date(
+        this.pivotDate.getFullYear(),
+        this.pivotDate.getMonth(),
+        this.pivotDate.getDate() + days,
+        0, 0, 0, 0);
       return date;
     });
   }

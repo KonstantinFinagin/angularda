@@ -1,7 +1,8 @@
 <h2 mat-dialog-title>New ticket</h2>
-<mat-dialog-content class="container">
+<form class="container" (ngSubmit)="save()">
 
-  <form class="container">
+  <mat-dialog-content class="container">
+
     <mat-form-field>
       <input matInput placeholder="Name" [formControl]="ticketName" [(ngModel)]="newTicket.name">
       <mat-error *ngIf="ticketName.invalid">Required name. Max 20 symbols</mat-error>
@@ -11,14 +12,14 @@
       <input matInput placeholder="Description" [formControl]="ticketDescription" [(ngModel)]="newTicket.description">
       <mat-error *ngIf="ticketDescription.invalid">Max 500 symbols</mat-error>
     </mat-form-field>
-  </form>
-</mat-dialog-content>
+  </mat-dialog-content>
 
-<mat-dialog-actions>
-  <button mat-button color="primary" (click)="save()" [disabled]="ticketName.invalid || ticketDescription.invalid ">
-    <mat-icon>save</mat-icon> Save
-  </button>
-  <button mat-button color="primary" (click)="dismiss()">
-    <mat-icon>cancel</mat-icon> Cancel
-  </button>
-</mat-dialog-actions>
+  <mat-dialog-actions>
+    <button mat-button type="submit" color="primary" [disabled]="ticketName.invalid || ticketDescription.invalid ">
+      <mat-icon>save</mat-icon> Save
+    </button>
+    <button mat-button color="primary" (click)="dismiss()">
+      <mat-icon>cancel</mat-icon> Cancel
+    </button>
+  </mat-dialog-actions>
+</form>
