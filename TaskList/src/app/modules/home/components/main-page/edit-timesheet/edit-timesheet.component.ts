@@ -60,10 +60,9 @@ export class EditTimesheetComponent implements OnInit, OnDestroy {
 
     this.subscriptions[0] = this.timesheetService.updateTimesheet(this.timesheet).subscribe(id => {
       this.timesheet.id = id;
-
       this.data.timesheet.id = id;
-      this.data.timesheet.loggedtime = this.timesheet.loggedtime;
-      this.data.timesheet.comment = this.timesheet.comment;
+      this.data.timesheet.loggedtime = this.form.value.loggedtime;
+      this.data.timesheet.comment = this.form.value.comment;
     });
 
     this.dialogRef.close(this.timesheet);
