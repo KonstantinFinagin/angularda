@@ -110,6 +110,7 @@ export class MainPageComponent implements OnInit, OnDestroy {
       this.tickets = null;
       return;
     }
+    // for smooth list unrolling
     await delay(200);
     this.expandedProjectId = projectId;
     this.loadTimesheets(this.expandedProjectId);
