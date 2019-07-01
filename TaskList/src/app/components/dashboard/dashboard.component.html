@@ -1,0 +1,42 @@
+<h2 class="mat-h2 margin-header">Ticket statuses dashboard</h2>
+
+<div>
+  <mat-form-field class="margin-header">
+    <mat-label>Select Project:</mat-label>
+    <mat-select [(ngModel)]="currentProject" [compareWith]="customCompare" (selectionChange)="projectChanged($event.value)">
+      <mat-option [value]="project" *ngFor="let project of projects | async">{{project.name}}</mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <button mat-button class="margin-header" (click)="openNewTicketDialog()" *ngIf="currentProject">
+    <mat-icon>add</mat-icon> New ticket
+  </button>
+
+</div>
+
+<div class="example-container" *ngFor="let status of ticketStatuses; let i = index">
+    <h2 class="mat-h4" [class.green]="highlightedColumns[i]">{{status}}</h2>
+
+    <div 
+
+      cdkDropList [id]="elementName+(i+1)" 
+      [cdkDropListData]="statusTickets[status]"
+      [cdkDropListConnectedTo]="getConnectedTo(i+1)" 
+      class="example-list" 
+      (cdkDropListDropped)="drop($event, i+1)"
+      >
+
+      <div class="example-box" *ngFor="let item of statusTickets[status]" 
+        cdkDrag 
+        [cdkDragData]="item"
+        (cdkDragStarted)="ticketDragStarted(i+1)"
+        (cdkDragEnded)="ticketDragEnded()"
+        >
+        <section class="mat-typography">
+        <h4>{{item.name}}</h4>
+        {{item.description}}
+        </section>
+      </div>
+    </div>
+</div>
+
