@@ -1,12 +1,12 @@
 <mat-toolbar color="primary">
 
-  <button mat-button (click)="navigateMainPage()" [disabled]="!user">
+  <a mat-button [routerLink]="['/mainpage']" [disabled]="!user">
     Home
-  </button>
+  </a>
 
-  <button mat-button (click)="navigateDashboard()" [disabled]="!user">
+  <a mat-button [routerLink]="['/dashboard']" [disabled]="!user">
     Dashboard
-  </button>
+  </a>
 
   <span class="example-spacer"></span>
 
@@ -14,8 +14,8 @@
     <section class="mat-typography">
         Hello, {{user.first}}!
         <button mat-button (click)="logout()">
-            Logout
-          </button>
+          Logout
+        </button>
     </section>
   </div>
 

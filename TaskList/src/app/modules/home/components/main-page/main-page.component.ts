@@ -9,9 +9,10 @@ import { find, map, flatMap, switchMap } from 'rxjs/operators';
 import { Timesheet } from 'src/app/model/project/timesheet';
 import { trigger, transition, style, animate } from '@angular/animations';
 import { delay } from 'q';
-import { tick } from '@angular/core/testing';
 import { MatDialog } from '@angular/material';
 import { EditTimesheetComponent } from './edit-timesheet/edit-timesheet.component';
+import { AuthenticationService } from 'src/app/services/authentication/authentication.service';
+import { User } from 'src/app/model/users/user';
 
 @Component({
   selector: 'app-main-page',
@@ -47,8 +48,10 @@ export class MainPageComponent implements OnInit, OnDestroy {
   getTicketsSubscription: Subscription;
 
   projectTicketsLoaded: boolean;
+  user: User;
 
   constructor(
+    private authenticationService: AuthenticationService,
     private projectService: ProjectService,
     private timesheetService: TimesheetService,
     private dialog: MatDialog
@@ -56,6 +59,10 @@ export class MainPageComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+    this.subscriptions[0] = this.authenticationService.currentUser.subscribe(currentUser => {
+      this.user = currentUser == null ? null : currentUser.user;
+    });
+
     this.projects = this.projectService.loadAll();
     this.pivotDate = new Date();
     this.setDates();
@@ -73,11 +80,11 @@ export class MainPageComponent implements OnInit, OnDestroy {
   setDates() {
 
     this.currentDates = [-6, -5, -4, -3, -2, -1, 0].map(days => {
-      const date = new Date();
-      date.setDate(this.pivotDate.getDate() + days);
-      date.setMonth(this.pivotDate.getMonth());
-      date.setFullYear(this.pivotDate.getFullYear());
-      date.setHours(0, 0, 0, 0);
+      const date = new Date(
+        this.pivotDate.getFullYear(),
+        this.pivotDate.getMonth(),
+        this.pivotDate.getDate() + days,
+        0, 0, 0, 0);
       return date;
     });
   }
@@ -103,6 +110,7 @@ export class MainPageComponent implements OnInit, OnDestroy {
       this.tickets = null;
       return;
     }
+    // for smooth list unrolling
     await delay(200);
     this.expandedProjectId = projectId;
     this.loadTimesheets(this.expandedProjectId);
@@ -144,7 +152,7 @@ export class MainPageComponent implements OnInit, OnDestroy {
       return dates.map(date => dateTimesheets(date));
     };
 
-    this.subscriptions[0] = this.getTicketsSubscription = this.projects
+    this.subscriptions[1] = this.getTicketsSubscription = this.projects
       .pipe(
 
         map(projects => projects.find(project => project.id === projectId).tickets),

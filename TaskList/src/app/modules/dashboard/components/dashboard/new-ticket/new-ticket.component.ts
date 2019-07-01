@@ -1,18 +1,18 @@
 import { Component, OnInit, Inject, OnDestroy } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
-import { FormControl, Validators } from '@angular/forms';
+import { FormControl, Validators, FormBuilder, FormGroup } from '@angular/forms';
 import { Ticket } from 'src/app/model/project/ticket';
 import { Project } from 'src/app/model/project/project';
 import { TicketService } from 'src/app/services/ticket/ticket.service';
 import { TicketStatus } from 'src/app/model/project/ticketstatusenum';
-import { Subscription } from 'rxjs';
+import { TouchSequence } from 'selenium-webdriver';
 
 @Component({
   selector: 'app-new-ticket',
   templateUrl: './new-ticket.component.html',
   styleUrls: ['./new-ticket.component.scss']
 })
-export class NewTicketComponent implements OnInit, OnDestroy {
+export class NewTicketComponent implements OnInit {
 
   ticketName: FormControl;
   ticketDescription: FormControl;
@@ -20,49 +20,51 @@ export class NewTicketComponent implements OnInit, OnDestroy {
   project: Project;
   newTicket: Ticket;
 
-  subscriptions: Subscription[] = [];
+  form: FormGroup;
 
   constructor(
+    private fb: FormBuilder,
     @Inject(MAT_DIALOG_DATA) public data: any,
     private dialogRef: MatDialogRef<NewTicketComponent>,
     private ticketService: TicketService) {
-
-    this.ticketName = new FormControl('', [Validators.required, Validators.maxLength(500)]);
-    this.ticketDescription = new FormControl('', [Validators.maxLength(500)]);
   }
 
   ngOnInit() {
     this.newTicket = new Ticket();
-    this.project = Object.assign({}, this.data.project);
+    this.project = {...this.data.project};
     this.newTicket.project = this.project.id;
     this.newTicket.name = this.getTicketName(this.project);
     this.newTicket.startdate = new Date();
     this.newTicket.enddate = new Date();
     this.newTicket.status = TicketStatus.Open;
-  }
 
-  ngOnDestroy(): void {
-    this.subscriptions.forEach(s => s.unsubscribe());
-    this.subscriptions = [];
+    this.ticketName = new FormControl(this.newTicket.name, [Validators.required, Validators.maxLength(500)]);
+    this.ticketDescription = new FormControl(this.newTicket.description, [Validators.maxLength(500)]);
+
+    this.form = this.fb.group({
+      ticketName: this.ticketName,
+      ticketDescription: this.ticketDescription
+    });
   }
 
   getTicketName(project: Project): string {
     const existingTicketNames = project.tickets.map(t => t.name);
 
-    let index = 1;
-    let name = '';
+    existingTicketNames.sort();
 
-    while (true) {
-      name = project.name.substring(0, 2).toUpperCase() + '-' + this.formatNumberLength((index++), 4);
+    const indexes = existingTicketNames.map(name => parseInt(name.substring(3), 10));
 
-      if (existingTicketNames.indexOf(name) === -1) {
-        return name;
-      }
-    }
+    const newIndex = this.formatNumberLength(Math.max(...indexes) + 1, 4) ;
+    const projectLiteral = project.name.substring(0, 2).toUpperCase();
+
+    return `${projectLiteral}-${newIndex}`;
   }
 
   save() {
-    this.subscriptions[0] = this.ticketService.addTicket(this.newTicket).subscribe(ticket => this.dialogRef.close(ticket));
+    this.newTicket.name = this.form.value.ticketName;
+    this.newTicket.description = this.form.value.ticketDescription;
+
+    this.ticketService.addTicket(this.newTicket).subscribe(ticket => this.dialogRef.close(ticket));
   }
 
   dismiss() {
@@ -72,8 +74,8 @@ export class NewTicketComponent implements OnInit, OnDestroy {
   formatNumberLength(num, length) {
     let r = '' + num;
     while (r.length < length) {
-        r = '0' + r;
+      r = '0' + r;
     }
     return r;
-}
+  }
 }

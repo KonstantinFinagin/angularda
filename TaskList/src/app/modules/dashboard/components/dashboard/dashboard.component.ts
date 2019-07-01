@@ -21,7 +21,7 @@ export class DashboardComponent implements OnInit {
   projects: Observable<Project[]>;
   currentProject: Project;
 
-  statusTickets: { [key: string]: Ticket[] };
+  statusTickets: { [key: string]: Ticket[] } = {};
   ticketStatuses: string[] = [];
   highlightedColumns: boolean[];
 
@@ -33,10 +33,9 @@ export class DashboardComponent implements OnInit {
     private ticketService: TicketService,
     private projectService: ProjectService,
     private dialog: MatDialog) {
-    }
+  }
 
   ngOnInit() {
-    this.statusTickets = {};
     this.loadProjects();
   }
 
@@ -50,7 +49,7 @@ export class DashboardComponent implements OnInit {
     this.ticketStatuses = [];
     for (const s in TicketStatus) {
 
-      if (typeof(TicketStatus[s]) === 'number') {
+      if (typeof (TicketStatus[s]) === 'number') {
 
         const ticketStatusNum = parseInt(TicketStatus[s], 10);
         const ticketStatusString = s;
@@ -75,11 +74,13 @@ export class DashboardComponent implements OnInit {
 
   getConnectedIndexes = (i: number): number[] => {
 
-    if (i === TicketStatus.Open) { return [TicketStatus.Development]; }
-    if (i === TicketStatus.Development) { return [TicketStatus.Open, TicketStatus.ReadyForQA]; }
-    if (i === TicketStatus.ReadyForQA) { return [TicketStatus.Development, TicketStatus.Test]; }
-    if (i === TicketStatus.Test) { return [TicketStatus.Closed, TicketStatus.Development]; }
-    if (i === TicketStatus.Closed) { return [TicketStatus.Open, TicketStatus.Test]; }
+    switch (i) {
+      case TicketStatus.Open: return [TicketStatus.Development];
+      case TicketStatus.Development: return [TicketStatus.Open, TicketStatus.ReadyForQA];
+      case TicketStatus.ReadyForQA: return [TicketStatus.Development, TicketStatus.Test];
+      case TicketStatus.Test: return [TicketStatus.Closed, TicketStatus.Development];
+      case TicketStatus.Closed: return [TicketStatus.Open, TicketStatus.Test];
+    }
   }
 
   getConnectedTo(i: number) {
@@ -102,22 +103,22 @@ export class DashboardComponent implements OnInit {
     if (event.previousContainer === event.container) {
       moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
     } else if (connected.indexOf(event.container.id) === -1) {
-        // do nothing
+      // do nothing
     } else {
       transferArrayItem(event.previousContainer.data,
-                        event.container.data,
-                        event.previousIndex,
-                        event.currentIndex);
+        event.container.data,
+        event.previousIndex,
+        event.currentIndex);
 
       const ticket = event.item.data as Ticket;
       ticket.status = this.getIndexByName(event.container.id);
-      this.subscriptions[0] = this.ticketService.updateTicketStatus(ticket).subscribe(data => {});
+      this.subscriptions[0] = this.ticketService.updateTicketStatus(ticket).subscribe(data => { });
     }
   }
 
   ticketDragStarted(statusIndex: number) {
     const connectedIndexes = this.getConnectedIndexes(statusIndex);
-    this.highlightedColumns = this.ticketStatuses.map((value, index) => connectedIndexes.indexOf(index + 1) !== -1);
+    this.highlightedColumns = this.ticketStatuses.map((value, index) => connectedIndexes.includes(index + 1));
   }
   ticketDragEnded() {
     this.highlightedColumns = this.ticketStatuses.map(() => false);

@@ -1,8 +1,8 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { MatDialog } from '@angular/material';
 import { Router } from '@angular/router';
-import { LoginComponent } from '../../modules/authentication/components/login/login.component';
-import { RegisterComponent } from '../../modules/authentication/components/register/register.component';
+import { LoginComponent } from '../../authentication/components/login/login.component';
+import { RegisterComponent } from '../../authentication/components/register/register.component';
 import { User } from 'src/app/model/users/user';
 import { first } from 'rxjs/operators';
 import { AuthenticationService } from 'src/app/services/authentication/authentication.service';
@@ -52,26 +52,6 @@ export class ToolbarComponent implements OnInit, OnDestroy {
     });
   }
 
-  openRegisterDialog() {
-
-    const dialogRef = this.dialog.open(RegisterComponent, {
-      width: '450px'
-    });
-
-    this.subscriptions[2] = dialogRef.afterClosed().subscribe(result => {
-      if (result) {
-      }
-    });
-  }
-
-  navigateMainPage() {
-    this.router.navigate(['/mainpage']);
-  }
-
-  navigateDashboard() {
-    this.router.navigate(['/dashboard']);
-  }
-
   login(loginModel: LoginModel): void {
 
     this.subscriptions[3] = this.authenticationService
@@ -90,10 +70,4 @@ export class ToolbarComponent implements OnInit, OnDestroy {
     this.authenticationService.logout();
     this.router.navigate(['/']);
   }
-
-  register(username: string, password: string) {
-    this.authenticationService
-      .register(username, password);
-  }
-
 }

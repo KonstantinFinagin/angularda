@@ -1,25 +1,27 @@
 <h2 mat-dialog-title>Login</h2>
-<mat-dialog-content>
+<form [formGroup]="form" (ngSubmit)="login()">
+  <mat-dialog-content>
 
-  <div class="login-container">
+    <div class="container">
 
-    <mat-form-field>
-      <input matInput placeholder="Email" [formControl]="email" [(ngModel)]="loginModel.email" required>
-      <mat-error *ngIf="email.invalid">{{getErrorMessage()}}</mat-error>
-    </mat-form-field>
+      <mat-form-field>
+        <input matInput placeholder="Email" formControlName="email" required>
+        <mat-error *ngIf="email.invalid">User email is required</mat-error>
+      </mat-form-field>
 
-    <mat-form-field>
-      <input type="password" matInput placeholder="EMail" [formControl]="email" [(ngModel)]="loginModel.password" required>
-      <mat-error *ngIf="password.invalid">{{getErrorMessage()}}</mat-error>
-    </mat-form-field>
-  </div>
-</mat-dialog-content>
+      <mat-form-field>
+        <input type="password" matInput placeholder="Password" formControlName="password" required>
+        <mat-error *ngIf="password.invalid">Password required</mat-error>
+      </mat-form-field>
+    </div>
+  </mat-dialog-content>
 
-<mat-dialog-actions>
-  <button mat-button color="primary" (click)="login()">
-    <mat-icon>arrow_right_alt</mat-icon> Login
-  </button>
-  <button mat-button color="secondary" (click)="closeDialog()">
-    <mat-icon>cancel</mat-icon> Cancel
-  </button>
-</mat-dialog-actions>
+  <mat-dialog-actions>
+    <button type="submit" mat-button color="primary" [disabled]="!form.valid">
+      <mat-icon>arrow_right_alt</mat-icon> Login
+    </button>
+    <button mat-button color="secondary" (click)="closeDialog()">
+      <mat-icon>cancel</mat-icon> Cancel
+    </button>
+  </mat-dialog-actions>
+</form>
